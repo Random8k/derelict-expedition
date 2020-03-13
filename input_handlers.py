@@ -2,30 +2,31 @@ import libtcodpy as libtcod
 
 
 def handle_keys(key):
+    key_char = chr(key.c)
     # Movement keys
-    if key.vk == libtcod.KEY_UP:
+    if key.vk == libtcod.KEY_UP or key_char == 'k':
         return {'move': (0, -1)}
-    elif key.vk == libtcod.KEY_DOWN:
+    elif key.vk == libtcod.KEY_DOWN or key_char == 'j':
         return {'move': (0, 1)}
-    elif key.vk == libtcod.KEY_LEFT:
+    elif key.vk == libtcod.KEY_LEFT or key_char == 'h':
         return {'move': (-1, 0)}
-    elif key.vk == libtcod.KEY_RIGHT:
+    elif key.vk == libtcod.KEY_RIGHT or key_char == 'l':
         return {'move': (1, 0)}
-    elif key.vk == libtcod.KEY_KP1:
+    elif key.vk == libtcod.KEY_KP1 or key_char == 'b':
         return {'move': (-1, 1)}
     elif key.vk == libtcod.KEY_KP2:
         return {'move': (0, 1)}
-    elif key.vk == libtcod.KEY_KP3:
+    elif key.vk == libtcod.KEY_KP3 or key_char == 'n':
         return {'move': (1, 1)}
     elif key.vk == libtcod.KEY_KP4:
         return {'move': (-1, 0)}
     elif key.vk == libtcod.KEY_KP6:
         return {'move': (1, 0)}
-    elif key.vk == libtcod.KEY_KP7:
+    elif key.vk == libtcod.KEY_KP7 or key_char == 'y':
         return {'move': (-1, -1)}
     elif key.vk == libtcod.KEY_KP8:
         return {'move': (0, -1)}
-    elif key.vk == libtcod.KEY_KP9:
+    elif key.vk == libtcod.KEY_KP9 or key_char == 'u':
         return {'move': (1, -1)}
 
     if key.vk == libtcod.KEY_ENTER and libtcod.KEY_ALT:
