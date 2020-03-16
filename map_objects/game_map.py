@@ -2,6 +2,8 @@ import libtcodpy as libtcod
 from random import randint
 
 from components.ai import BasicMonster
+from components.equipment import EquipmentSlots
+from components.equippable import Equippable
 from components.fighter import Fighter
 from components.item import Item
 from components.stairs import Stairs
@@ -127,6 +129,8 @@ class GameMap:
 
         item_chances = {
             'medkit': 35,
+            'power_sword': from_dungeon_level([[5, 4]], self.dungeon_level),
+            'body_armor': from_dungeon_level([[15, 8]], self.dungeon_level),
             'charge_rifle': from_dungeon_level([[25, 4]], self.dungeon_level),
             'grenade': from_dungeon_level([[25, 6]], self.dungeon_level),
             'emp': from_dungeon_level([[10, 2]], self.dungeon_level)
@@ -158,28 +162,37 @@ class GameMap:
             y = randint(room.y1 + 1, room.y2 - 1)
 
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
-                monster_choice = random_choice_from_dict(item_chances)
+                item_choice = random_choice_from_dict(item_chances)
 
-                if monster_choice == 'medkit':
+                if item_choice == 'medkit':
                     item_component = Item(use_function=heal, amount=40)
                     item = Entity(x, y, '!', libtcod.light_green, 'Medkit', render_order=RenderOrder.ITEM,
                                   item=item_component)
 
-                elif monster_choice == 'grenade':
+                elif item_choice == 'power_sword':
+                    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
+                    item = Entity(x, y, '|', libtcod.sky, 'Power Sword', equippable=equippable_component)
+
+                elif item_choice == 'body_armor':
+                    equippable_component = Equippable(EquipmentSlots.BODY, defense_bonus=1)
+                    item = Entity(x, y, '(', libtcod.darker_orange, 'Light Body Armor', equippable=equippable_component)
+
+                elif item_choice == 'grenade':
                     item_component = Item(use_function=throw_grenade, targeting=True, targeting_message=Message(
                         'Left-click a target tile to throw the grenade, or right-click to cancel.', libtcod.light_cyan),
                                           damage=25, radius=3)
-                    item = Entity(x, y, 'o', libtcod.dark_lime, 'Grenade', render_order=RenderOrder.ITEM,
+
+                    item = Entity(x, y, ',', libtcod.dark_lime, 'Grenade', render_order=RenderOrder.ITEM,
                                   item=item_component)
 
-                elif monster_choice == 'emp':
+                elif item_choice == 'emp':
                     item_component = Item(use_function=throw_scrambler, targeting=True, targeting_message=Message(
                         'Left-click an enemy to confuse it, or right-click to cancel.', libtcod.light_cyan))
-                    item = Entity(x, y, 'o', libtcod.sky, 'EMP Grenade', render_order=RenderOrder.ITEM,
+                    item = Entity(x, y, ',', libtcod.sky, 'EMP Grenade', render_order=RenderOrder.ITEM,
                                   item=item_component)
                 else:
                     item_component = Item(use_function=throw_lightning, damage=40, maximum_range=5)
-                    item = Entity(x, y, '/', libtcod.yellow, 'Charge Rifle', render_order=RenderOrder.ITEM,
+                    item = Entity(x, y, '_', libtcod.yellow, 'Charge Rifle', render_order=RenderOrder.ITEM,
                                   item=item_component)
 
                 entities.append(item)
